@@ -1,25 +1,7 @@
-import Layout from '../../components/layout'; // Imports the layout from compnents folder
-import { getPostData, getAllPostIds } from '../../lib/posts-json'; // Imports the code we need from new file posts-json
+import Layout from '../../components/layout'; // Imports the layout from components folder
+import { getPostData, getAllPostIds } from '../../lib/posts-json'; // Imports the helper that fetches JSON posts
 import Head from 'next/head'; // Imports head from Next.js
-// import Date from '../../components/date'; // Imports Date from the date module we installed
-import utilStyles from '../../styles/utils.module.css'; // Imports the CSS from utils.module.css file 
-import Link from 'next/link'; // Imports the link function from Next.js
-
-
-// Exports the layout of the post data and adds CSS
-// Structures the data in to JSX
-export default function Post({ postData }) {
-  return (
-    <Layout>
-      <Head>
-        <title>{postData.title}</title>
-      </Head>
-      <article>
-        <h1 className={utilStyles.headingXl}>{postData.title}</h1>
-      </article>
-    </Layout>
-  );
-}
+import utilStyles from '../../styles/utils.module.css'; // Imports the CSS from utils.module.css file
 
 // Gets the static paths for the blog posts
 export async function getStaticPaths() {
@@ -32,9 +14,9 @@ export async function getStaticPaths() {
   };
 }
 
-// Exports the Static Props from 
+// Exports the Static Props for a single post
 export async function getStaticProps({ params }) {
-  // Uses async to post the props and data to our blog posts
+  // fetch single post object by id
   const postData = await getPostData(params.id);
 
   return {
@@ -42,4 +24,25 @@ export async function getStaticProps({ params }) {
       postData,
     },
   };
+}
+
+// Render a single post. The JSON object from the API uses keys like `post_title` and `post_content`.
+export default function Post({ postData }) {
+  // postData may be the API object or the fallback { id, title: 'Not found' }
+  const title = postData.post_title || postData.title || 'Untitled';
+  const contentHtml = postData.post_content || postData.content || '';
+
+  return (
+    <Layout>
+      <Head>
+        <title>{title}</title>
+      </Head>
+      <article>
+        <h1 className={utilStyles.headingXl}>{title}</h1>
+
+        {/* The API returns HTML in `post_content` — render it as HTML. */}
+        <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      </article>
+    </Layout>
+  );
 }
