@@ -26,11 +26,11 @@ export async function getStaticProps({ params }) {
   };
 }
 
-// Render a single post. The JSON object from the API uses keys like `post_title` and `post_content`.
+// Render a single post. The JSON object from the API uses keys like `distro_name` and `description`.
 export default function Post({ postData }) {
   // postData may be the API object or the fallback { id, title: 'Not found' }
-  const title = postData.post_title || postData.title || 'Untitled';
-  const contentHtml = postData.post_content || postData.content || '';
+  const title = postData.acf.distro_name || postData.title || 'Untitled';
+  const contentHtml = postData.acf.description || postData.content || 'Fix the code to show content.';
 
   return (
     <Layout>
@@ -40,7 +40,7 @@ export default function Post({ postData }) {
       <article>
         <h1 className={utilStyles.headingXl}>{title}</h1>
 
-        {/* The API returns HTML in `post_content` — render it as HTML. */}
+        {/* The API returns HTML in `description` — render it as HTML. */}
         <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </article>
     </Layout>
