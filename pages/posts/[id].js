@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   // fetch single post object by id
   const postData = await getPostData(params.id);
-
+  // Pass post data to the page via props
   return {
     props: {
       postData,
@@ -33,13 +33,13 @@ export default function Post({ postData }) {
   const contentHtml = postData.acf.description || postData.content || 'Fix the code to show content.';
 
   return (
+    // Render the layout for a single post
     <Layout>
       <Head>
         <title>{title}</title>
       </Head>
       <article>
         <h1 className={utilStyles.headingXl}>{title}</h1>
-
         {/* The API returns HTML in `description` — render it as HTML. */}
         <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </article>
