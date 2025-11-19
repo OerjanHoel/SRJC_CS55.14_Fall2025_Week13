@@ -3,7 +3,6 @@ import Link from 'next/link'; // Imports link from Next.js
 import Layout, { siteTitle } from '../components/layout'; // Imports layout and sisteTitle from layout.js. siteTitle a variable in layout.js
 import utilStyles from '../styles/utils.module.css'; // Imports CSS from utils.module.css file
 import { getSortedPostsData } from '../lib/posts-json'; // Imports function from posts-json.js
-// import Date from '../components/date'; // Imports the Date module we installed
 
 // Function creates the static html for our blog posts
 export async function getStaticProps() {
@@ -28,7 +27,8 @@ export default function Home({ allPostsData }) {
       <section className={utilStyles.headingMd}>
         <p>
           This website uses the 'got' node package to retrive the JSON data from the WordPress posts,
-          residing in the WP Database. 
+          residing in the WP Database. The data is then parsed and displayed as a list of blog articles. 
+          The posts are created in WordPress with ACF custom fields for 'distro_name' and 'description'. 
         </p>
       </section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
@@ -37,10 +37,6 @@ export default function Home({ allPostsData }) {
           {allPostsData.map(({ id, title }) => (
             <li className={utilStyles.listItem} key={id}>
               <Link href={`/posts/${id}`}>{title}</Link>
-              {/*<br />
-              <small className={utilStyles.lightText}>
-                <Date dateString={date} />
-              </small> */}
             </li>
           ))}
         </ul>
